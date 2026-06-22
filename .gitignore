@@ -4,3 +4,8 @@ dist
 .DS_Store
 .env
 .vscode
+
+# Source documents contain personal information and are not deployed.
+/中文简历.pdf
+/英文简历.pdf
+/成绩单.pdf

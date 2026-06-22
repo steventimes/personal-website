@@ -1,17 +1,23 @@
 ---
+import type { TimelineItem } from "../data/site";
+
+interface Props {
+  items: TimelineItem[];
+}
+
 const { items } = Astro.props;
 ---
 <div class="space-y-5">
-  {(items as any[]).map((it) => (
+  {items.map((it) => (
     <div class="glass shadow-soft rounded-2xl p-6">
       <div class="flex flex-col md:flex-row md:items-baseline md:justify-between gap-2">
         <div>
-          <p class="text-lg font-semibold text-heading">{it.title}</p>
-          <p class="text-body">{it.org}</p>
+          <p class="text-lg font-semibold text-slate-900 dark:text-slate-100">{it.title}</p>
+          <p class="text-slate-700 dark:text-slate-200">{it.org}</p>
         </div>
-        <p class="text-sm text-secondary">{it.time}</p>
+        <p class="text-sm text-slate-600 dark:text-slate-300">{it.time}</p>
       </div>
-      <ul class="mt-4 list-disc pl-5 space-y-1 text-heading">
+      <ul class="mt-4 list-disc pl-5 space-y-1 text-slate-900 dark:text-slate-100">
         {it.bullets.map((b: string) => <li>{b}</li>)}
       </ul>
     </div>

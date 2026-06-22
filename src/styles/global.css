@@ -81,17 +81,15 @@ html {
   background: rgba(226,232,240,.08);
 }
 
-/* color for theme switching */
-.text-heading { color: #0f172a; }
-.text-body { color: #1e293b; }
-.text-secondary { color: #334155; }
-.text-muted { color: #64748b; }
+@media (prefers-reduced-motion: no-preference) {
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 700ms ease, transform 700ms ease;
+  }
 
-.dark .text-heading { color: #f1f5f9; }
-.dark .text-body { color: #e2e8f0; }
-.dark .text-secondary { color: #cbd5e1; }
-.dark .text-muted { color: #94a3b8; }
-
-/* Placeholder */
-.placeholder\:text-muted::placeholder { color: #64748b; }
-.dark .placeholder\:text-muted::placeholder { color: #94a3b8; }
+  .js .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -8,13 +8,13 @@ const { items } = Astro.props;
 
   <div class="absolute left-1/2 top-24 w-[min(760px,92vw)] -translate-x-1/2 glass shadow-soft rounded-2xl overflow-hidden border border-white/10">
     <div class="p-4 border-b border-white/10 flex items-center gap-3">
-      <span class="text-xs px-2 py-1 rounded-full bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/10 text-heading">Ctrl F</span>
+      <span class="text-xs px-2 py-1 rounded-full bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/10 text-slate-900 dark:text-slate-100">Ctrl K</span>
       <input
         id="cmdk-input"
-        class="w-full bg-transparent outline-none text-base text-heading placeholder:text-muted"
+        class="w-full bg-transparent outline-none text-base text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-slate-400"
         placeholder="Type to search… (e.g., projects, github, contact)"
       />
-      <button id="cmdk-close" class="text-sm opacity-80 hover:opacity-100 text-heading">Esc</button>
+      <button id="cmdk-close" type="button" class="text-sm opacity-80 hover:opacity-100 text-slate-900 dark:text-slate-100">Esc</button>
     </div>
 
     <div id="cmdk-list" class="max-h-[55vh] overflow-auto p-2"></div>
@@ -37,14 +37,14 @@ const { items } = Astro.props;
           filtered
             .map(
               (i) => `
-          <a class="block px-3 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/10 transition text-heading"
+          <a class="block px-3 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/10 transition text-slate-900 dark:text-slate-100"
              href="${i.href}">
             <div class="font-medium">${i.label}</div>
             <div class="text-xs opacity-70">${i.href}</div>
           </a>
         `
             )
-            .join("") || `<div class="px-3 py-8 text-sm opacity-70 text-body">No results.</div>`;
+            .join("") || `<div class="px-3 py-8 text-sm opacity-70 text-slate-700 dark:text-slate-200">No results.</div>`;
       };
 
       const open = () => {
@@ -55,8 +55,10 @@ const { items } = Astro.props;
 
       const hide = () => root.classList.add("hidden");
 
+      window.openCommandPalette = open;
+
       document.addEventListener("keydown", (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "f") {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
           e.preventDefault();
           root.classList.contains("hidden") ? open() : hide();
         }
