@@ -1,76 +1,44 @@
 ---
+interface CommandItem {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  items: CommandItem[];
+}
+
 const { items } = Astro.props;
-// items: { label, href }[]
 ---
-
-<div id="cmdk-root" class="fixed inset-0 z-50 hidden">
-  <div class="absolute inset-0 bg-black/50"></div>
-
-  <div class="absolute left-1/2 top-24 w-[min(760px,92vw)] -translate-x-1/2 glass shadow-soft rounded-2xl overflow-hidden border border-white/10">
-    <div class="p-4 border-b border-white/10 flex items-center gap-3">
-      <span class="text-xs px-2 py-1 rounded-full bg-black/5 dark:bg-white/10 border border-black/10 dark:border-white/10 text-slate-900 dark:text-slate-100">Ctrl K</span>
-      <input
-        id="cmdk-input"
-        class="w-full bg-transparent outline-none text-base text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-slate-400"
-        placeholder="Type to search… (e.g., projects, github, contact)"
-      />
-      <button id="cmdk-close" type="button" class="text-sm opacity-80 hover:opacity-100 text-slate-900 dark:text-slate-100">Esc</button>
+<dialog
+  class="command-dialog surface"
+  data-command-palette
+  data-items={JSON.stringify(items)}
+  aria-labelledby="command-title"
+>
+  <header class="flex items-center justify-between gap-4 p-4">
+    <div>
+      <h2 id="command-title" class="font-semibold text-zinc-950">Navigate</h2>
+      <p class="mt-1 text-sm text-zinc-500">Search sections and external links.</p>
     </div>
+    <button class="icon-button" type="button" data-command-close aria-label="Close" title="Close">×</button>
+  </header>
 
-    <div id="cmdk-list" class="max-h-[55vh] overflow-auto p-2"></div>
+  <div class="border-y border-zinc-200 p-3">
+    <label class="sr-only" for="command-search">Search</label>
+    <input
+      id="command-search"
+      data-command-input
+      class="w-full rounded border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-950 placeholder:text-zinc-400"
+      type="search"
+      placeholder="Search"
+      autocomplete="off"
+    />
   </div>
 
-  <script define:vars={{ items }}>
-    (() => {
-      const root = document.getElementById("cmdk-root");
-      const input = document.getElementById("cmdk-input");
-      const list = document.getElementById("cmdk-list");
-      const close = document.getElementById("cmdk-close");
+  <nav data-command-list class="max-h-[55vh] overflow-auto p-2" aria-label="Search results"></nav>
+</dialog>
 
-      const render = (q = "") => {
-        const query = q.trim().toLowerCase();
-        const filtered = (items || []).filter((i) =>
-          i.label.toLowerCase().includes(query)
-        );
-
-        list.innerHTML =
-          filtered
-            .map(
-              (i) => `
-          <a class="block px-3 py-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/10 transition text-slate-900 dark:text-slate-100"
-             href="${i.href}">
-            <div class="font-medium">${i.label}</div>
-            <div class="text-xs opacity-70">${i.href}</div>
-          </a>
-        `
-            )
-            .join("") || `<div class="px-3 py-8 text-sm opacity-70 text-slate-700 dark:text-slate-200">No results.</div>`;
-      };
-
-      const open = () => {
-        root.classList.remove("hidden");
-        render("");
-        setTimeout(() => input.focus(), 0);
-      };
-
-      const hide = () => root.classList.add("hidden");
-
-      window.openCommandPalette = open;
-
-      document.addEventListener("keydown", (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
-          e.preventDefault();
-          root.classList.contains("hidden") ? open() : hide();
-        }
-        if (e.key === "Escape" && !root.classList.contains("hidden")) hide();
-      });
-
-      root.addEventListener("click", (e) => {
-        if (e.target === root || e.target === root.firstElementChild) hide();
-      });
-
-      close.addEventListener("click", hide);
-      input.addEventListener("input", () => render(input.value));
-    })();
-  </script>
-</div>
+<script>
+  import "../scripts/command-palette";
+</script>

@@ -5,17 +5,13 @@ interface Props {
 
 const { skills } = Astro.props;
 ---
-<div class="grid md:grid-cols-2 gap-5">
+<div class="grid gap-x-10 md:grid-cols-2">
   {Object.entries(skills).map(([group, items]) => (
-    <div class="glass shadow-soft rounded-2xl p-5">
-      <p class="font-semibold mb-3 text-slate-900 dark:text-slate-100">{group}</p>
-      <div class="flex flex-wrap gap-2">
-        {items.map((s) => (
-          <span class="text-sm px-3 py-1 rounded-full bg-slate-900/5 dark:bg-white/10 border border-slate-900/10 dark:border-white/10 text-slate-900 dark:text-slate-100">
-            {s}
-          </span>
-        ))}
+    <section class="border-t border-zinc-200 py-5">
+      <h3 class="font-semibold text-zinc-950">{group}</h3>
+      <div class="mt-3 flex flex-wrap gap-2">
+        {items.map((skill) => <span class="tag">{skill}</span>)}
       </div>
-    </div>
+    </section>
   ))}
 </div>

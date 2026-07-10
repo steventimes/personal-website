@@ -28,8 +28,10 @@ export const site = {
   ],
 
   skills: {
-    Languages: ["Java", "C++", "Python", "Go", "Rust", "JavaScript", "TypeScript", "SQL"],
-    "Frameworks & Systems": ["Spring Boot", "MyBatis", "RocksDB", "PostgreSQL", "MySQL", "Redis", "Docker", "Linux", "Git"],
+    Programming: ["Java", "C++", "Python", "Go", "Rust", "JavaScript", "TypeScript", "SQL"],
+    Frontend: ["Astro", "TypeScript", "HTML", "CSS", "Tailwind CSS", "DOM APIs"],
+    "Data & Backend": ["Spring Boot", "MyBatis", "RocksDB", "PostgreSQL", "MySQL", "Redis"],
+    Tooling: ["Docker", "Linux", "Git", "GitHub Actions"],
     "Spoken Languages": ["Mandarin Chinese (Native)", "English (Fluent)"]
   },
 
@@ -82,6 +84,12 @@ export const site = {
       desc: "Contributed research, feature development, and validation for TikTok and X tracking-pixel detection in The Markup's public-interest privacy inspection tool, which has handled more than 18 million scans.",
       tech: ["Privacy Measurement", "Tracker Detection", "Product Research"],
       link: "https://themarkup.org/blacklight/2026/02/09/blacklight-update-tiktok-x-twitter"
+    },
+    {
+      name: "Personal Site Architecture",
+      desc: "Built this static portfolio with Astro components and focused TypeScript modules, including safe DOM rendering for remote GitHub data and automated GitHub Pages deployment.",
+      tech: ["Astro", "TypeScript", "HTML/CSS", "GitHub Actions"],
+      link: "https://github.com/steventimes/steventimes.github.io"
     }
   ]
 };

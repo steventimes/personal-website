@@ -1,6 +1,11 @@
 # Personal Website
 
-A single-page portfolio built with Astro and Tailwind CSS and deployed on GitHub Pages.
+A concise single-page portfolio built with Astro 7, Tailwind CSS 4, and browser-native TypeScript. It is statically generated and deployed to GitHub Pages.
+
+## Requirements
+
+- Node.js 22.12 or newer
+- npm 9.6.5 or newer
 
 ## Development
 
@@ -9,6 +14,13 @@ npm ci
 npm run dev
 ```
 
-Run `npm run build` to create the production site in `dist/`.
+Run `npm run build` to create the production site in `dist/`. Dependency lifecycle scripts are disabled through `.npmrc`; the site does not require them to build.
 
-Portfolio content lives in `src/data/site.ts`; shared metadata and the Google site-verification tag live in `src/layouts/BaseLayout.astro`.
+## Structure
+
+- `src/data/site.ts` contains portfolio content.
+- `src/components/` contains Astro presentation components.
+- `src/scripts/` contains client-side TypeScript for navigation and GitHub repository rendering.
+- `src/styles/global.css` contains the Tailwind import and the small site-specific design layer.
+
+Remote GitHub data is validated and rendered with DOM APIs rather than HTML string injection.
