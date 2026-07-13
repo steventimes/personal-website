@@ -1,0 +1,17 @@
+---
+import type { TechnologyGroup } from "../data/site";
+
+interface Props {
+  groups: TechnologyGroup[];
+}
+
+const { groups } = Astro.props;
+---
+<dl class="technology-matrix">
+  {groups.map((group) => (
+    <div class="technology-matrix__row">
+      <dt>{group.label}</dt>
+      <dd>{group.items.join(" · ")}</dd>
+    </div>
+  ))}
+</dl>

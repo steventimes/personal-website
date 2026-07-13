@@ -1,0 +1,40 @@
+---
+import type { Profile } from "../data/site";
+
+interface Props {
+  name: string;
+  profile: Profile;
+}
+
+const { name, profile } = Astro.props;
+---
+<section id="about" class="hero" aria-labelledby="hero-title">
+  <div class="hero__profile">
+    <div class="hero__copy">
+      <h1 id="hero-title">{name}</h1>
+      <p class="hero__role">{profile.role}</p>
+      <p class="hero__intro">{profile.intro}</p>
+      <div class="hero__actions">
+        <a href={profile.resumePath}>View résumé</a>
+        <a href={`mailto:${profile.email}`}>Email Steven</a>
+      </div>
+    </div>
+
+    <img
+      class="hero__portrait"
+      src={profile.photoPath}
+      alt={`${name} portrait`}
+      width="640"
+      height="480"
+    />
+  </div>
+
+  <dl class="hero__metadata">
+    {profile.metadata.map((item) => (
+      <div>
+        <dt>{item.label}</dt>
+        <dd>{item.value}</dd>
+      </div>
+    ))}
+  </dl>
+</section>

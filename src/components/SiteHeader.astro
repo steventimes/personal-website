@@ -1,0 +1,33 @@
+---
+import type { NavigationItem } from "../data/site";
+
+interface Props {
+  name: string;
+  navigation: NavigationItem[];
+  resumePath: string;
+}
+
+const { name, navigation, resumePath } = Astro.props;
+---
+<header class="site-header">
+  <nav class="site-header__nav" aria-label="Primary navigation">
+    <a class="site-header__name" href="#about">{name}</a>
+
+    <div class="site-header__links">
+      {navigation.map((item) => <a href={item.href}>{item.label}</a>)}
+    </div>
+
+    <div class="site-header__actions">
+      <button type="button" data-command-trigger>Search</button>
+      <a href={resumePath}>Resume</a>
+    </div>
+
+    <details class="site-header__menu">
+      <summary>Menu</summary>
+      <div>
+        {navigation.map((item) => <a href={item.href}>{item.label}</a>)}
+        <a href={resumePath}>Resume</a>
+      </div>
+    </details>
+  </nav>
+</header>

@@ -1,0 +1,18 @@
+---
+interface Props {
+  text: string;
+  email: string;
+  linkedin: string;
+  github: string;
+}
+
+const { text, email, linkedin, github } = Astro.props;
+---
+<div class="contact-block">
+  <p>{text}</p>
+  <div class="contact-block__links">
+    <a href={`mailto:${email}`}>Email</a>
+    <a href={linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
+    <a href={github} target="_blank" rel="noreferrer">GitHub</a>
+  </div>
+</div>

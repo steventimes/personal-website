@@ -7,19 +7,21 @@ interface Props {
 
 const { items } = Astro.props;
 ---
-<div class="border-b border-zinc-200">
+<ol class="timeline">
   {items.map((item) => (
-    <article class="grid gap-4 border-t border-zinc-200 py-7 md:grid-cols-[13rem_1fr] md:gap-8">
-      <div>
-        <p class="text-sm font-medium text-zinc-900">{item.org}</p>
-        <p class="mt-1 text-sm text-zinc-500">{item.time}</p>
-      </div>
-      <div>
-        <h3 class="text-lg font-semibold text-zinc-950">{item.title}</h3>
-        <ul class="mt-3 list-disc space-y-2 pl-5 leading-7 text-zinc-600">
-          {item.bullets.map((bullet) => <li>{bullet}</li>)}
-        </ul>
-      </div>
-    </article>
+    <li>
+      <article class="timeline__item">
+        <div class="timeline__metadata">
+          <p>{item.org}</p>
+          <p>{item.time}</p>
+        </div>
+        <div class="timeline__content">
+          <h3>{item.title}</h3>
+          <ul>
+            {item.bullets.map((bullet) => <li>{bullet}</li>)}
+          </ul>
+        </div>
+      </article>
+    </li>
   ))}
-</div>
+</ol>

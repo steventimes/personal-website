@@ -1,0 +1,35 @@
+---
+import type { WorkItem } from "../data/site";
+
+interface Props {
+  items: WorkItem[];
+}
+
+const { items } = Astro.props;
+---
+<ol class="work-list">
+  {items.map((item) => (
+    <li>
+      <article id={item.id} class="work-item">
+        <h3>{item.title}</h3>
+        <dl class="work-item__details">
+          <div>
+            <dt>Context</dt>
+            <dd>{item.context}</dd>
+          </div>
+          <div>
+            <dt>Work</dt>
+            <dd>{item.contribution}</dd>
+          </div>
+          <div>
+            <dt>Methods</dt>
+            <dd>{item.methods.join(" · ")}</dd>
+          </div>
+        </dl>
+        {item.link && (
+          <a href={item.link.href} target="_blank" rel="noreferrer">{item.link.label}</a>
+        )}
+      </article>
+    </li>
+  ))}
+</ol>

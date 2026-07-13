@@ -2,16 +2,15 @@
 interface Props {
   id: string;
   title: string;
-  kicker?: string;
+  variant?: "default" | "band";
 }
 
-const { id, title, kicker } = Astro.props;
+const { id, title, variant = "default" } = Astro.props;
 ---
-<section id={id} class="scroll-mt-20 border-t border-zinc-200 py-12 md:py-16">
-  <div class="mx-auto max-w-5xl px-5">
-    <header class="mb-8 grid gap-2 md:grid-cols-[12rem_1fr] md:items-end">
-      {kicker && <p class="eyebrow">{kicker}</p>}
-      <h2 class="text-2xl font-semibold text-zinc-950 md:text-3xl">{title}</h2>
+<section id={id} class:list={["page-section", { "page-section--band": variant === "band" }]}>
+  <div class="page-section__inner">
+    <header class="page-section__header">
+      <h2>{title}</h2>
     </header>
     <slot />
   </div>

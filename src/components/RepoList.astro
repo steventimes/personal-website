@@ -1,0 +1,55 @@
+---
+import type { RepositorySnapshot } from "../lib/repositories";
+
+interface Props {
+  username: string;
+  repositories: RepositorySnapshot[];
+}
+
+const { username, repositories } = Astro.props;
+const dateFormatter = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+  timeZone: "UTC"
+});
+---
+<div class="repo-list" data-username={username}>
+  <div class="repo-list__intro">
+    <p>Public-repository snapshot, ordered by stars and recent activity.</p>
+    <a href={`https://github.com/${username}`} target="_blank" rel="noreferrer">View all on GitHub</a>
+  </div>
+
+  <ol>
+    {repositories.map((repository) => (
+      <li>
+        <article class="repo-row" data-repo-name={repository.name}>
+          <div>
+            <h3>
+              <a href={repository.url} target="_blank" rel="noreferrer">{repository.name}</a>
+            </h3>
+            <p>{repository.description}</p>
+          </div>
+          <dl class="repo-row__metadata">
+            <div>
+              <dt>Language</dt>
+              <dd>{repository.language}</dd>
+            </div>
+            <div>
+              <dt>Stars</dt>
+              <dd>{repository.stars}</dd>
+            </div>
+            <div>
+              <dt>Forks</dt>
+              <dd>{repository.forks}</dd>
+            </div>
+            <div>
+              <dt>Updated</dt>
+              <dd><time datetime={repository.updatedAt}>{dateFormatter.format(new Date(repository.updatedAt))}</time></dd>
+            </div>
+          </dl>
+        </article>
+      </li>
+    ))}
+  </ol>
+</div>

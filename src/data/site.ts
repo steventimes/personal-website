@@ -30,7 +30,7 @@ export interface Profile {
   metadata: Array<{ label: string; value: string }>;
 }
 
-interface NavigationItem {
+export interface NavigationItem {
   label: string;
   href: string;
 }
@@ -167,26 +167,6 @@ export const site = {
 
   contactText: "For research, engineering, or collaboration inquiries, email me.",
 
-  about: [
-    "I'm a B.S. Computer Science student and Mathematics minor at Brandeis University, graduating in December 2026.",
-    "At the Smart & Scalable Data Systems Lab, I study workload-aware RocksDB tuning and prototype benchmarking workflows for FluidLSM, a self-adaptive LSM-based key-value store.",
-    "My work also spans higher-education data fragmentation, text-to-SQL evaluation, database teaching, backend engineering, and public-interest privacy tooling."
-  ],
-
-  highlights: [
-    { label: "Academic", value: "3.748 GPA • Dean's List every semester" },
-    { label: "Education", value: "B.S. Computer Science • Mathematics minor" },
-    { label: "Focus", value: "Database systems, systems research, software engineering" }
-  ],
-
-  skills: {
-    Programming: ["Java", "C++", "Python", "Go", "Rust", "JavaScript", "TypeScript", "SQL"],
-    Frontend: ["Astro", "TypeScript", "HTML", "CSS", "Tailwind CSS", "DOM APIs"],
-    "Data & Backend": ["Spring Boot", "MyBatis", "RocksDB", "PostgreSQL", "MySQL", "Redis"],
-    Tooling: ["Docker", "Linux", "Git", "GitHub Actions"],
-    "Spoken Languages": ["Mandarin Chinese (Native)", "English (Fluent)"]
-  },
-
   experience: [
     {
       title: "Researcher — Smart & Scalable Data Systems Lab",
@@ -228,20 +208,5 @@ export const site = {
         "Used Linux development workflows to run services, inspect logs, debug backend tasks, and refactor Java service logic."
       ]
     }
-  ] satisfies ExperienceItem[],
-
-  projects: [
-    {
-      name: "Blacklight Privacy Detection Tool",
-      desc: "Contributed research, feature development, and validation for TikTok and X tracking-pixel detection in The Markup's public-interest privacy inspection tool, which has handled more than 18 million scans.",
-      tech: ["Privacy Measurement", "Tracker Detection", "Product Research"],
-      link: "https://themarkup.org/blacklight/2026/02/09/blacklight-update-tiktok-x-twitter"
-    },
-    {
-      name: "Personal Site Architecture",
-      desc: "Built this static portfolio with Astro components and focused TypeScript modules, including safe DOM rendering for remote GitHub data and automated GitHub Pages deployment.",
-      tech: ["Astro", "TypeScript", "HTML/CSS", "GitHub Actions"],
-      link: "https://github.com/steventimes/steventimes.github.io"
-    }
-  ]
+  ] satisfies ExperienceItem[]
 };
