@@ -96,12 +96,14 @@ document.querySelectorAll<HTMLElement>("[data-repo-cards]").forEach((root) => {
       if (!response.ok) throw new Error(`GitHub API returned ${response.status}`);
 
       const payload: unknown = await response.json();
-      if (!Array.isArray(payload) || !payload.every(isGitHubRepository)) {
+      if (!Array.isArray(payload)) {
         throw new Error("GitHub API returned an unexpected response");
       }
+      const repositories = payload.filter(isGitHubRepository);
+      if (repositories.length === 0) throw new Error("GitHub API returned no usable repositories");
 
       const remoteByName = new Map(
-        rankRepositories(payload, 4).map((repository) => [repository.name, repository])
+        rankRepositories(repositories, 4).map((repository) => [repository.name, repository])
       );
 
       snapshots.forEach((snapshot) => {

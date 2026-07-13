@@ -105,6 +105,7 @@ document.querySelectorAll<HTMLDialogElement>("[data-command-palette]").forEach((
       link.href = item.href;
       link.setAttribute("role", "option");
       link.setAttribute("aria-selected", "false");
+      link.tabIndex = -1;
       if (item.external) {
         link.target = "_blank";
         link.rel = "noreferrer";
@@ -165,8 +166,6 @@ document.querySelectorAll<HTMLDialogElement>("[data-command-palette]").forEach((
       close();
       return;
     }
-
-    if (event.key === "Tab") close();
   });
 
   dialog.addEventListener("click", (event) => {

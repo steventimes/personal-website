@@ -16,6 +16,7 @@ npm run dev
 ## Verification
 
 ```sh
+npx playwright install chromium
 npm run verify
 npm run test:ui
 ```

@@ -1,14 +1,12 @@
 import { expect, test } from "@playwright/test";
 
-test.beforeAll(async ({ browser }) => {
-  const page = await browser.newPage();
-  await page.goto("/");
-  await page.waitForLoadState("networkidle");
-  await page.close();
+const githubApiPattern = "https://api.github.com/**";
+
+test.beforeEach(async ({ page }) => {
+  await page.route(githubApiPattern, (route) => route.abort());
 });
 
 test("renders the evidence-led page order and primary actions", async ({ page }) => {
-  await page.route("https://api.github.com/**", (route) => route.abort());
   await page.goto("/");
 
   await expect(page.getByRole("heading", {
@@ -58,8 +56,6 @@ test("uses the locked palette and portrait ratio", async ({ page }) => {
 });
 
 test("captures concept comparison screenshots", async ({ page }) => {
-  await page.route("https://api.github.com/**", (route) => route.abort());
-
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/");
   await page.screenshot({ path: "/tmp/steven-portfolio-desktop-first-viewport.png", fullPage: false });
@@ -170,6 +166,32 @@ test("every command close path clears active option state", async ({ page }) => 
   await expect(firstOption).toHaveAttribute("aria-selected", "false");
 });
 
+test("Tab keeps command focus inside the modal", async ({ page }) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: /Search/ });
+  const dialog = page.getByRole("dialog", { name: "Navigate" });
+  const input = dialog.getByRole("searchbox", { name: "Search" });
+  const closeButton = dialog.getByRole("button", { name: "Close" });
+
+  await trigger.focus();
+  await page.keyboard.press("Control+K");
+  await expect(input).toBeFocused();
+
+  await page.keyboard.press("Shift+Tab");
+  await expect(dialog).toBeVisible();
+  await expect(closeButton).toBeFocused();
+
+  await page.keyboard.press("Tab");
+  await expect(dialog).toBeVisible();
+  await expect(input).toBeFocused();
+  await expect(dialog.locator("[role='option']").first()).toHaveAttribute("tabindex", "-1");
+
+  await page.keyboard.press("Escape");
+  await expect(dialog).not.toBeVisible();
+  await expect(trigger).toBeFocused();
+});
+
 test("JavaScript-disabled mobile navigation keeps section links available", async ({ browser }) => {
   const context = await browser.newContext({
     javaScriptEnabled: false,
@@ -189,7 +211,6 @@ test("JavaScript-disabled mobile navigation keeps section links available", asyn
 });
 
 test("keeps the static repository snapshot when GitHub fails", async ({ page }) => {
-  await page.route("https://api.github.com/**", (route) => route.abort());
   await page.goto("/");
   for (const name of [
     "fpstreams",
@@ -203,7 +224,8 @@ test("keeps the static repository snapshot when GitHub fails", async ({ page }) 
 });
 
 test("refreshes repository metadata while preserving authored content", async ({ page }) => {
-  await page.route("https://api.github.com/**", (route) => route.fulfill({
+  await page.unroute(githubApiPattern);
+  await page.route(githubApiPattern, (route) => route.fulfill({
     status: 200,
     contentType: "application/json",
     body: JSON.stringify([{
@@ -215,6 +237,8 @@ test("refreshes repository metadata while preserving authored content", async ({
       forks_count: 1,
       updated_at: "2026-07-12T10:00:00Z",
       fork: false
+    }, {
+      name: "soccer-analytics"
     }])
   }));
   await page.goto("/");
@@ -229,4 +253,12 @@ test("refreshes repository metadata while preserving authored content", async ({
     "href",
     "https://github.com/steventimes/fpstreams"
   );
+  await expect(row.getByText("Rust", { exact: true })).toBeVisible();
+  await expect(row.getByText("1 fork", { exact: true })).toBeVisible();
+
+  const staticRow = page.locator('[data-repo-name="soccer-analytics"]');
+  await expect(staticRow.getByText("Python", { exact: true })).toBeVisible();
+  await expect(staticRow.getByText("0 stars", { exact: true })).toBeVisible();
+  await expect(staticRow.getByText("0 forks", { exact: true })).toBeVisible();
+  await expect(page.getByText("Live GitHub data unavailable.")).toBeHidden();
 });
