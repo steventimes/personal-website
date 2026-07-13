@@ -18,11 +18,22 @@ const { name, navigation, resumePath } = Astro.props;
     </div>
 
     <div class="site-header__actions">
-      <button type="button" data-command-trigger>Search</button>
+      <button
+        type="button"
+        data-command-trigger
+        aria-controls="command-palette"
+        aria-expanded="false"
+        aria-haspopup="dialog"
+        aria-label="Search"
+        hidden
+      >
+        <span>Search</span>
+        <kbd data-command-shortcut>Ctrl K</kbd>
+      </button>
       <a href={resumePath}>Resume</a>
     </div>
 
-    <details class="site-header__menu">
+    <details class="mobile-menu site-header__menu">
       <summary>Menu</summary>
       <div>
         {navigation.map((item) => <a href={item.href}>{item.label}</a>)}

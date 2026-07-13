@@ -1,8 +1,5 @@
 ---
-interface CommandItem {
-  label: string;
-  href: string;
-}
+import type { CommandItem } from "../lib/commands";
 
 interface Props {
   items: CommandItem[];
@@ -11,6 +8,7 @@ interface Props {
 const { items } = Astro.props;
 ---
 <dialog
+  id="command-palette"
   class="command-dialog surface"
   data-command-palette
   data-items={JSON.stringify(items)}
@@ -33,10 +31,27 @@ const { items } = Astro.props;
       type="search"
       placeholder="Search"
       autocomplete="off"
+      spellcheck="false"
+      aria-autocomplete="list"
+      aria-controls="command-results"
+      aria-expanded="false"
     />
   </div>
 
-  <nav data-command-list class="max-h-[55vh] overflow-auto p-2" aria-label="Search results"></nav>
+  <div
+    id="command-results"
+    data-command-list
+    class="max-h-[55vh] overflow-auto p-2"
+    role="listbox"
+    aria-label="Search results"
+  ></div>
+  <p
+    data-command-status
+    class="sr-only"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+  ></p>
 </dialog>
 
 <script>

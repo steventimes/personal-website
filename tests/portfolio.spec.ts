@@ -94,3 +94,43 @@ test("uses locked work title and command dialog styles", async ({ page }) => {
   await expect(input).toHaveCSS("border-color", "rgb(217, 221, 227)");
   await expect(dialog.getByRole("button", { name: "Close" })).toHaveCSS("color", "rgb(89, 97, 108)");
 });
+
+test("command search supports keyboard filtering and navigation", async ({ page }) => {
+  await page.goto("/");
+
+  await page.keyboard.press("Control+K");
+  await page.getByRole("searchbox", { name: "Search" }).fill("Work");
+  await page.keyboard.press("ArrowDown");
+  await page.keyboard.press("Enter");
+
+  await expect.poll(() => page.evaluate(() => location.hash)).toBe("#projects");
+});
+
+test("command trigger keeps aria-expanded in sync", async ({ page }) => {
+  await page.goto("/");
+  const trigger = page.getByRole("button", { name: /Search/ });
+
+  await expect(trigger).toHaveAttribute("aria-expanded", "false");
+  await page.keyboard.press("Control+K");
+  await expect(trigger).toHaveAttribute("aria-expanded", "true");
+  await page.keyboard.press("Escape");
+  await expect(trigger).toHaveAttribute("aria-expanded", "false");
+});
+
+test("JavaScript-disabled mobile navigation keeps section links available", async ({ browser }) => {
+  const context = await browser.newContext({
+    javaScriptEnabled: false,
+    viewport: { width: 390, height: 844 }
+  });
+  const page = await context.newPage();
+
+  try {
+    await page.goto("/");
+    await page.getByText("Menu", { exact: true }).click();
+    await page.getByRole("link", { name: "Experience" }).click();
+    expect(await page.evaluate(() => location.hash)).toBe("#experience");
+    await expect(page.locator("[data-command-trigger]")).toBeHidden();
+  } finally {
+    await context.close();
+  }
+});
