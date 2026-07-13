@@ -13,8 +13,10 @@ const dateFormatter = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
   timeZone: "UTC"
 });
+const formatCount = (value: number, label: string) =>
+  `${value} ${label}${value === 1 ? "" : "s"}`;
 ---
-<div class="repo-list" data-username={username}>
+<div class="repo-list" data-repo-cards data-username={username}>
   <div class="repo-list__intro">
     <p>Public-repository snapshot, ordered by stars and recent activity.</p>
     <a href={`https://github.com/${username}`} target="_blank" rel="noreferrer">View all on GitHub</a>
@@ -28,28 +30,36 @@ const dateFormatter = new Intl.DateTimeFormat("en-US", {
             <h3>
               <a href={repository.url} target="_blank" rel="noreferrer">{repository.name}</a>
             </h3>
-            <p>{repository.description}</p>
+            <p data-repo-description>{repository.description}</p>
           </div>
           <dl class="repo-row__metadata">
             <div>
               <dt>Language</dt>
-              <dd>{repository.language}</dd>
+              <dd data-repo-language>{repository.language}</dd>
             </div>
             <div>
               <dt>Stars</dt>
-              <dd>{repository.stars}</dd>
+              <dd data-repo-stars={repository.stars}>{formatCount(repository.stars, "star")}</dd>
             </div>
             <div>
               <dt>Forks</dt>
-              <dd>{repository.forks}</dd>
+              <dd data-repo-forks={repository.forks}>{formatCount(repository.forks, "fork")}</dd>
             </div>
             <div>
               <dt>Updated</dt>
-              <dd><time datetime={repository.updatedAt}>{dateFormatter.format(new Date(repository.updatedAt))}</time></dd>
+              <dd>
+                <time data-repo-updated datetime={repository.updatedAt}>
+                  {dateFormatter.format(new Date(repository.updatedAt))}
+                </time>
+              </dd>
             </div>
           </dl>
         </article>
       </li>
     ))}
   </ol>
+
+  <p class="mt-4 text-sm text-[var(--muted)]" data-repo-error role="status" hidden>
+    Live GitHub data unavailable.
+  </p>
 </div>

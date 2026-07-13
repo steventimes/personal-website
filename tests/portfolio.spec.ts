@@ -134,3 +134,46 @@ test("JavaScript-disabled mobile navigation keeps section links available", asyn
     await context.close();
   }
 });
+
+test("keeps the static repository snapshot when GitHub fails", async ({ page }) => {
+  await page.route("https://api.github.com/**", (route) => route.abort());
+  await page.goto("/");
+  for (const name of [
+    "fpstreams",
+    "soccer-analytics",
+    "high-ed-data-generator",
+    "Prompt-Testing-Framework"
+  ]) {
+    await expect(page.getByRole("link", { name: new RegExp(name, "i") })).toBeVisible();
+  }
+  await expect(page.getByText("Live GitHub data unavailable.")).toBeVisible();
+});
+
+test("refreshes repository metadata while preserving authored content", async ({ page }) => {
+  await page.route("https://api.github.com/**", (route) => route.fulfill({
+    status: 200,
+    contentType: "application/json",
+    body: JSON.stringify([{
+      name: "fpstreams",
+      description: "Remote description that must not replace authored content.",
+      html_url: "https://github.com/steventimes/remote-fpstreams-url",
+      language: "Rust",
+      stargazers_count: 2,
+      forks_count: 1,
+      updated_at: "2026-07-12T10:00:00Z",
+      fork: false
+    }])
+  }));
+  await page.goto("/");
+
+  const row = page.locator('[data-repo-name="fpstreams"]');
+  await expect(row.getByText("2 stars", { exact: true })).toBeVisible();
+  await expect(row.getByText(
+    "A typed functional programming library for Python with lazy streams, Option and Result containers, parallel processing, and optional Rust acceleration.",
+    { exact: true }
+  )).toBeVisible();
+  await expect(row.getByRole("link", { name: "fpstreams" })).toHaveAttribute(
+    "href",
+    "https://github.com/steventimes/fpstreams"
+  );
+});
