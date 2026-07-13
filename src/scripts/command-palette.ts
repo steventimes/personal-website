@@ -93,7 +93,7 @@ document.querySelectorAll<HTMLDialogElement>("[data-command-palette]").forEach((
     if (matches.length === 0) {
       const empty = document.createElement("p");
       empty.className = "px-3 py-8 text-center text-sm text-zinc-500";
-      empty.textContent = "No results.";
+      empty.textContent = "No matching destination.";
       list.replaceChildren(empty);
       return;
     }
@@ -179,7 +179,10 @@ document.querySelectorAll<HTMLDialogElement>("[data-command-palette]").forEach((
       event.clientY <= bounds.bottom;
     if (!inside) close();
   });
-  dialog.addEventListener("close", () => setExpanded(false));
+  dialog.addEventListener("close", () => {
+    setExpanded(false);
+    setActiveIndex(-1);
+  });
 
   document.addEventListener("keydown", (event) => {
     if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {

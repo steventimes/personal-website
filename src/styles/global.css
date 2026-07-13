@@ -651,6 +651,7 @@ main {
 }
 
 .command-dialog .command-option:hover,
+.command-dialog .command-option[aria-selected="true"],
 .command-dialog .command-option:focus-visible {
   border-left-color: var(--accent);
   background: var(--band);

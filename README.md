@@ -1,26 +1,31 @@
 # Personal Website
 
-A concise single-page portfolio built with Astro 7, Tailwind CSS 4, and browser-native TypeScript. It is statically generated and deployed to GitHub Pages.
+Hongchen (Steven) Yang's technical portfolio presents database systems research, engineering work, experience, public code, and contact details.
 
-## Requirements
-
-- Node.js 22.12 or newer
-- npm 9.6.5 or newer
+`src/data/site.ts` is the source for visible portfolio facts. Astro components render that content into a static page.
 
 ## Development
+
+Use Node 22.12 or newer.
 
 ```sh
 npm ci
 npm run dev
 ```
 
-Run `npm run build` to create the production site in `dist/`. Dependency lifecycle scripts are disabled through `.npmrc`; the site does not require them to build.
+## Verification
 
-## Structure
+```sh
+npm run verify
+npm run test:ui
+```
 
-- `src/data/site.ts` contains portfolio content.
-- `src/components/` contains Astro presentation components.
-- `src/scripts/` contains client-side TypeScript for navigation and GitHub repository rendering.
-- `src/styles/global.css` contains the Tailwind import and the small site-specific design layer.
+## Site behavior
 
-Remote GitHub data is validated and rendered with DOM APIs rather than HTML string injection.
+The Public Code section renders an authored snapshot before JavaScript runs. The client validates GitHub API data and refreshes repository metadata when available; a failed refresh leaves the snapshot intact.
+
+The command palette supports filtering and keyboard navigation. Mobile navigation uses native `details` markup, so section and résumé links remain available without JavaScript.
+
+## Deployment
+
+The GitHub Actions workflow checks, tests, and builds the static site before deploying `dist/` to GitHub Pages.

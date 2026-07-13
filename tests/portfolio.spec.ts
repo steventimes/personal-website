@@ -62,6 +62,7 @@ test("captures concept comparison screenshots", async ({ page }) => {
 
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/");
+  await page.screenshot({ path: "/tmp/steven-portfolio-desktop-first-viewport.png", fullPage: false });
   await page.screenshot({ path: "/tmp/steven-portfolio-desktop-full.png", fullPage: true });
   await page.locator("#about").screenshot({ path: "/tmp/steven-portfolio-hero.png" });
   await page.locator("#projects").screenshot({ path: "/tmp/steven-portfolio-work.png" });
@@ -69,10 +70,22 @@ test("captures concept comparison screenshots", async ({ page }) => {
   await page.locator("#skills").screenshot({ path: "/tmp/steven-portfolio-stack.png" });
   await page.locator("#repos").screenshot({ path: "/tmp/steven-portfolio-repos.png" });
   await page.locator("#contact").screenshot({ path: "/tmp/steven-portfolio-contact.png" });
+  await page.locator(".site-footer").screenshot({ path: "/tmp/steven-portfolio-footer.png" });
+
+  await page.getByRole("button", { name: "Search" }).click();
+  const commandDialog = page.getByRole("dialog", { name: "Navigate" });
+  const commandInput = commandDialog.getByRole("searchbox", { name: "Search" });
+  await commandInput.press("ArrowDown");
+  await commandDialog.screenshot({ path: "/tmp/steven-portfolio-command.png" });
+  await page.keyboard.press("Escape");
 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
   await page.screenshot({ path: "/tmp/steven-portfolio-mobile.png", fullPage: false });
+  await page.locator(".site-header__menu > summary").click();
+  await page.screenshot({ path: "/tmp/steven-portfolio-mobile-menu.png", fullPage: false });
+  const menuOverflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+  expect(menuOverflow).toBeLessThanOrEqual(0);
 });
 
 test("uses locked work title and command dialog styles", async ({ page }) => {
@@ -93,6 +106,11 @@ test("uses locked work title and command dialog styles", async ({ page }) => {
   await expect(input).toHaveCSS("background-color", "rgb(255, 255, 255)");
   await expect(input).toHaveCSS("border-color", "rgb(217, 221, 227)");
   await expect(dialog.getByRole("button", { name: "Close" })).toHaveCSS("color", "rgb(89, 97, 108)");
+  await input.press("ArrowDown");
+  const activeOption = dialog.locator("[role='option'][aria-selected='true']");
+  await expect(activeOption).toHaveCSS("background-color", "rgb(245, 247, 250)");
+  await expect(activeOption).toHaveCSS("border-left-color", "rgb(21, 89, 214)");
+
 });
 
 test("command search supports keyboard filtering and navigation", async ({ page }) => {
@@ -106,6 +124,13 @@ test("command search supports keyboard filtering and navigation", async ({ page 
   await expect.poll(() => page.evaluate(() => location.hash)).toBe("#projects");
 });
 
+test("command search uses the approved empty-state copy", async ({ page }) => {
+  await page.goto("/");
+  await page.keyboard.press("Control+K");
+  await page.getByRole("searchbox", { name: "Search" }).fill("no such destination");
+  await expect(page.getByText("No matching destination.")).toBeVisible();
+});
+
 test("command trigger keeps aria-expanded in sync", async ({ page }) => {
   await page.goto("/");
   const trigger = page.getByRole("button", { name: /Search/ });
@@ -115,6 +140,34 @@ test("command trigger keeps aria-expanded in sync", async ({ page }) => {
   await expect(trigger).toHaveAttribute("aria-expanded", "true");
   await page.keyboard.press("Escape");
   await expect(trigger).toHaveAttribute("aria-expanded", "false");
+});
+
+test("every command close path clears active option state", async ({ page }) => {
+  await page.goto("/");
+
+  const trigger = page.getByRole("button", { name: /Search/ });
+  const dialog = page.locator("[data-command-palette]");
+  const input = dialog.locator("[data-command-input]");
+  const firstOption = dialog.locator("[role='option']").first();
+
+  await trigger.click();
+  await input.press("ArrowDown");
+  await expect(input).toHaveAttribute("aria-activedescendant", /option-/);
+  await expect(firstOption).toHaveAttribute("aria-selected", "true");
+  await firstOption.click();
+
+  await expect(dialog).not.toBeVisible();
+  await expect(input).not.toHaveAttribute("aria-activedescendant", /.+/);
+  await expect(firstOption).toHaveAttribute("aria-selected", "false");
+
+  await trigger.click();
+  await input.press("ArrowDown");
+  await dialog.getByRole("button", { name: "Close" }).focus();
+  await page.keyboard.press("Escape");
+
+  await expect(dialog).not.toBeVisible();
+  await expect(input).not.toHaveAttribute("aria-activedescendant", /.+/);
+  await expect(firstOption).toHaveAttribute("aria-selected", "false");
 });
 
 test("JavaScript-disabled mobile navigation keeps section links available", async ({ browser }) => {

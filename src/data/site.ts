@@ -169,7 +169,7 @@ export const site = {
 
   experience: [
     {
-      title: "Researcher — Smart & Scalable Data Systems Lab",
+      title: "Researcher, Smart & Scalable Data Systems Lab",
       org: "Brandeis University",
       time: "May 2025 – Present",
       bullets: [
@@ -180,7 +180,7 @@ export const site = {
       ]
     },
     {
-      title: "Data Science Intern — Independent Study",
+      title: "Data Science Intern, Independent Study",
       org: "Brandeis University",
       time: "Jan 2026 – Present",
       bullets: [
@@ -190,7 +190,7 @@ export const site = {
       ]
     },
     {
-      title: "Teaching Assistant — Introduction to Database",
+      title: "Teaching Assistant, Introduction to Database",
       org: "Brandeis University",
       time: "Jan 2026 – Present",
       bullets: [
