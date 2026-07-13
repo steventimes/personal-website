@@ -74,3 +74,23 @@ test("captures concept comparison screenshots", async ({ page }) => {
   await page.goto("/");
   await page.screenshot({ path: "/tmp/steven-portfolio-mobile.png", fullPage: false });
 });
+
+test("uses locked work title and command dialog styles", async ({ page }) => {
+  await page.goto("/");
+
+  await expect(page.getByRole("heading", {
+    level: 3,
+    name: "Fragmented higher-education data and text-to-SQL"
+  })).toHaveCSS("font-size", "22px");
+
+  await page.getByRole("button", { name: "Search" }).click();
+  const dialog = page.getByRole("dialog", { name: "Navigate" });
+  await expect(dialog).toBeVisible();
+  await expect(dialog.getByRole("heading", { name: "Navigate" })).toHaveCSS("color", "rgb(17, 19, 24)");
+
+  const input = dialog.getByRole("searchbox", { name: "Search" });
+  await expect(input).toHaveCSS("color", "rgb(17, 19, 24)");
+  await expect(input).toHaveCSS("background-color", "rgb(255, 255, 255)");
+  await expect(input).toHaveCSS("border-color", "rgb(217, 221, 227)");
+  await expect(dialog.getByRole("button", { name: "Close" })).toHaveCSS("color", "rgb(89, 97, 108)");
+});

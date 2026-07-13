@@ -15,24 +15,9 @@
   --content: 70rem;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  background: var(--page);
-  color: var(--ink);
-}
-
 ::selection {
-  background: #bfdbfe;
-}
-
-a,
-button,
-input {
-  outline-color: var(--accent);
-  outline-offset: 3px;
+  background: var(--band);
+  color: var(--ink);
 }
 
 .skip-link {
@@ -51,54 +36,6 @@ input {
   transform: translateY(0);
 }
 
-.surface {
-  border: 1px solid var(--line);
-  background: var(--surface);
-}
-
-.command-dialog {
-  margin: auto;
-  width: min(40rem, calc(100vw - 2rem));
-  max-height: min(36rem, calc(100vh - 3rem));
-  overflow: hidden;
-  border-radius: 8px;
-  color: var(--ink);
-  box-shadow: 0 18px 50px rgb(24 24 27 / 0.22);
-}
-
-.command-dialog::backdrop {
-  background: rgb(24 24 27 / 0.42);
-}
-
-.icon-button {
-  display: inline-grid;
-  width: 2rem;
-  height: 2rem;
-  flex: 0 0 auto;
-  place-items: center;
-  border-radius: 4px;
-  color: #52525b;
-  font-size: 1.5rem;
-  line-height: 1;
-}
-
-.icon-button:hover {
-  background: #f4f4f5;
-  color: #18181b;
-}
-
-.command-option {
-  display: block;
-  border-radius: 4px;
-  padding: 0.625rem 0.75rem;
-  color: var(--ink);
-}
-
-.command-option:hover,
-.command-option:focus-visible {
-  background: var(--accent-soft);
-}
-
 /* Technical editorial layout */
 *,
 *::before,
@@ -108,6 +45,7 @@ input {
 
 html {
   background: var(--page);
+  scroll-behavior: smooth;
   scroll-padding-top: 5rem;
 }
 
@@ -408,7 +346,7 @@ main {
 .work-item h3 {
   margin: 0;
   color: var(--accent);
-  font-size: 1.5rem;
+  font-size: 1.375rem;
   font-weight: 500;
   letter-spacing: -0.025em;
   line-height: 1.16;
@@ -635,33 +573,88 @@ main {
   line-height: 1.5;
 }
 
-.surface {
-  border: 1px solid var(--line);
-  background: var(--page);
-}
-
 .command-dialog {
+  margin: auto;
   width: min(38rem, calc(100vw - 2rem));
   max-height: min(34rem, calc(100vh - 2rem));
+  overflow: hidden;
+  border: 1px solid var(--line);
   border-radius: 4px;
+  background: var(--page);
+  color: var(--ink);
   font-family: var(--font-sans);
-  box-shadow: 0 18px 48px rgb(17 19 24 / 0.18);
+  box-shadow: 0 18px 48px color-mix(in srgb, var(--ink) 18%, transparent);
 }
 
 .command-dialog::backdrop {
-  background: rgb(17 19 24 / 0.35);
+  background: color-mix(in srgb, var(--ink) 35%, transparent);
 }
 
-.command-option {
+.command-dialog header,
+.command-dialog [data-command-list] {
+  background: var(--page);
+  color: var(--ink);
+}
+
+.command-dialog header h2 {
+  color: var(--ink);
+}
+
+.command-dialog header p,
+.command-dialog [data-command-list] > p,
+.command-dialog .command-option span:last-child {
+  color: var(--muted);
+}
+
+.command-dialog > div {
+  border-color: var(--line);
+  background: var(--page);
+}
+
+.command-dialog input {
+  border-color: var(--line);
+  border-radius: 4px;
+  background: var(--page);
+  color: var(--ink);
+}
+
+.command-dialog input::placeholder {
+  color: var(--muted);
+}
+
+.command-dialog .icon-button {
+  display: inline-grid;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 0;
+  border-radius: 4px;
+  background: var(--page);
+  color: var(--muted);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.command-dialog .icon-button:hover {
+  background: var(--band);
+  color: var(--ink);
+}
+
+.command-dialog .command-option {
+  display: block;
+  padding: 0.625rem 0.75rem;
   border-radius: 0;
   border-left: 3px solid transparent;
+  color: var(--ink);
   font-size: 0.9375rem;
 }
 
-.command-option:hover,
-.command-option:focus-visible {
+.command-dialog .command-option:hover,
+.command-dialog .command-option:focus-visible {
   border-left-color: var(--accent);
   background: var(--band);
+  color: var(--accent-hover);
 }
 
 @media (max-width: 900px) {
@@ -890,11 +883,5 @@ main {
   *::after {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
   }
 }
