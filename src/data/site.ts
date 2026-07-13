@@ -47,6 +47,7 @@ export const site = {
   email: "stevenyang0316@gmail.com",
   linkedin: "https://www.linkedin.com/in/hongchen-yang-3803b4294/",
   githubUsername: "steventimes",
+  githubUrl: "https://github.com/steventimes",
   resumePath: "/resume.pdf",
   photoPath: "/headphoto.jpg",
 
