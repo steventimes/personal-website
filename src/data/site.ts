@@ -116,6 +116,15 @@ export const site = {
 
   repositories: [
     {
+      name: "software-system-atlas",
+      description: "A bilingual software-systems curriculum with 14 volumes, 320 chapter files, machine-readable catalogs, and automated documentation checks.",
+      language: "Markdown",
+      stars: 0,
+      forks: 0,
+      updatedAt: "2026-07-15T02:00:15Z",
+      url: "https://github.com/steventimes/software-system-atlas"
+    },
+    {
       name: "fpstreams",
       description: "A typed functional programming library for Python with lazy streams, Option and Result containers, parallel processing, and optional Rust acceleration.",
       language: "Python",

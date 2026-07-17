@@ -8,17 +8,23 @@ interface Props {
 const { items } = Astro.props;
 ---
 <ol class="work-list">
-  {items.map((item) => (
+  {items.map((item, index) => (
     <li>
-      <article id={item.id} class="work-item">
-        <h3>{item.title}</h3>
+      <article
+        id={item.id}
+        class:list={["work-item", { "work-item--featured": index === 0 }]}
+      >
+        <header class="work-item__heading">
+          {index === 0 && <p class="work-item__status">Current research</p>}
+          <h3>{item.title}</h3>
+        </header>
         <dl class="work-item__details">
           <div>
-            <dt>Context</dt>
+            <dt>Question</dt>
             <dd>{item.context}</dd>
           </div>
           <div>
-            <dt>Work</dt>
+            <dt>Contribution</dt>
             <dd>{item.contribution}</dd>
           </div>
           <div>

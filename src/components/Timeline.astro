@@ -13,7 +13,10 @@ const { items } = Astro.props;
       <article class="timeline__item">
         <div class="timeline__metadata">
           <p>{item.org}</p>
-          <p>{item.time}</p>
+          <p>
+            {item.time}
+            {item.time.includes("Present") && <span class="timeline__status">Current</span>}
+          </p>
         </div>
         <div class="timeline__content">
           <h3>{item.title}</h3>

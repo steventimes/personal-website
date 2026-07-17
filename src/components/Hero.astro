@@ -29,12 +29,10 @@ const { name, profile } = Astro.props;
     />
   </div>
 
-  <dl class="hero__metadata">
-    {profile.metadata.map((item) => (
-      <div>
-        <dt>{item.label}</dt>
-        <dd>{item.value}</dd>
-      </div>
-    ))}
-  </dl>
+  <div class="hero__details" aria-label="Education summary">
+    <p class="hero__detail-primary">
+      {profile.metadata.slice(0, 3).map((item) => item.value).join(" · ")}
+    </p>
+    <p class="hero__detail-secondary">{profile.metadata[3]?.value}</p>
+  </div>
 </section>
