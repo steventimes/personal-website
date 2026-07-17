@@ -31,6 +31,26 @@ test("renders the evidence-led page order and primary actions", async ({ page })
   }
 });
 
+test("presents a compact research profile", async ({ page }) => {
+  await page.goto("/");
+
+  const hero = page.locator("#about");
+  await expect(hero.getByText(
+    "Brandeis University · B.S. Computer Science · Mathematics minor · December 2026",
+    { exact: true }
+  )).toBeVisible();
+  await expect(hero.getByText(
+    "3.748 GPA · Dean's List every semester",
+    { exact: true }
+  )).toBeVisible();
+
+  const featured = page.locator(".work-item--featured");
+  await expect(featured.getByText("Current research", { exact: true })).toBeVisible();
+  await expect(featured.locator("dt", { hasText: "Question" })).toBeVisible();
+  await expect(featured.locator("dt", { hasText: "Contribution" })).toBeVisible();
+  await expect(page.locator(".timeline__status", { hasText: "Current" })).toHaveCount(3);
+});
+
 for (const viewport of [
   { width: 1440, height: 1000 },
   { width: 768, height: 1024 },
@@ -45,14 +65,30 @@ for (const viewport of [
   });
 }
 
-test("uses the locked palette and portrait ratio", async ({ page }) => {
+test("uses the research-memo palette, type scale, and portrait ratio", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto("/");
-  await expect(page.locator("body")).toHaveCSS("background-color", "rgb(255, 255, 255)");
+
+  await expect(page.locator("body")).toHaveCSS("background-color", "rgb(247, 248, 250)");
+
   const portrait = page.getByRole("img", { name: /Hongchen.*portrait/i });
   const box = await portrait.boundingBox();
   expect(box).not.toBeNull();
   expect(Math.abs((box!.width / box!.height) - (4 / 3))).toBeLessThan(0.03);
+
+  const title = page.getByRole("heading", {
+    level: 3,
+    name: "FluidLSM and workload-aware RocksDB tuning"
+  });
+  const size = Number.parseFloat(await title.evaluate(
+    (element) => getComputedStyle(element).fontSize
+  ));
+  expect(size).toBeGreaterThanOrEqual(30);
+  expect(size).toBeLessThanOrEqual(38);
+  await expect(page.locator(".work-item--featured")).toHaveCSS(
+    "border-left-color",
+    "rgb(36, 87, 166)"
+  );
 });
 
 test("captures concept comparison screenshots", async ({ page }) => {
@@ -84,29 +120,30 @@ test("captures concept comparison screenshots", async ({ page }) => {
   expect(menuOverflow).toBeLessThanOrEqual(0);
 });
 
-test("uses locked work title and command dialog styles", async ({ page }) => {
+test("uses restrained work title and command dialog styles", async ({ page }) => {
   await page.goto("/");
 
   await expect(page.getByRole("heading", {
     level: 3,
     name: "Fragmented higher-education data and text-to-SQL"
-  })).toHaveCSS("font-size", "22px");
+  })).toHaveCSS("font-size", "24px");
 
-  await page.getByRole("button", { name: "Search" }).click();
+  const searchTrigger = page.getByRole("button", { name: "Search" });
+  await expect(searchTrigger).toHaveCSS("column-gap", "8px");
+  await searchTrigger.click();
   const dialog = page.getByRole("dialog", { name: "Navigate" });
   await expect(dialog).toBeVisible();
-  await expect(dialog.getByRole("heading", { name: "Navigate" })).toHaveCSS("color", "rgb(17, 19, 24)");
+  await expect(dialog.getByRole("heading", { name: "Navigate" })).toHaveCSS("color", "rgb(23, 25, 31)");
 
   const input = dialog.getByRole("searchbox", { name: "Search" });
-  await expect(input).toHaveCSS("color", "rgb(17, 19, 24)");
+  await expect(input).toHaveCSS("color", "rgb(23, 25, 31)");
   await expect(input).toHaveCSS("background-color", "rgb(255, 255, 255)");
-  await expect(input).toHaveCSS("border-color", "rgb(217, 221, 227)");
-  await expect(dialog.getByRole("button", { name: "Close" })).toHaveCSS("color", "rgb(89, 97, 108)");
+  await expect(input).toHaveCSS("border-color", "rgb(216, 221, 229)");
+  await expect(dialog.getByRole("button", { name: "Close" })).toHaveCSS("color", "rgb(89, 97, 112)");
   await input.press("ArrowDown");
   const activeOption = dialog.locator("[role='option'][aria-selected='true']");
-  await expect(activeOption).toHaveCSS("background-color", "rgb(245, 247, 250)");
-  await expect(activeOption).toHaveCSS("border-left-color", "rgb(21, 89, 214)");
-
+  await expect(activeOption).toHaveCSS("background-color", "rgb(247, 248, 250)");
+  await expect(activeOption).toHaveCSS("border-left-color", "rgb(36, 87, 166)");
 });
 
 test("command search supports keyboard filtering and navigation", async ({ page }) => {
@@ -213,6 +250,7 @@ test("JavaScript-disabled mobile navigation keeps section links available", asyn
 test("keeps the static repository snapshot when GitHub fails", async ({ page }) => {
   await page.goto("/");
   for (const name of [
+    "software-system-atlas",
     "fpstreams",
     "soccer-analytics",
     "high-ed-data-generator",
@@ -220,6 +258,10 @@ test("keeps the static repository snapshot when GitHub fails", async ({ page }) 
   ]) {
     await expect(page.getByRole("link", { name: new RegExp(name, "i") })).toBeVisible();
   }
+  await expect(page.getByText(
+    "A bilingual software-systems curriculum with 14 volumes, 320 chapter files, machine-readable catalogs, and automated documentation checks.",
+    { exact: true }
+  )).toBeVisible();
   await expect(page.getByText("Live GitHub data unavailable.")).toBeVisible();
 });
 
