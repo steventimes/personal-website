@@ -123,7 +123,7 @@ a:hover {
   display: inline-flex;
   align-items: center;
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.84rem;
   font-weight: 500;
   letter-spacing: 0.02em;
   text-decoration: none;
@@ -144,7 +144,7 @@ a:hover {
   align-items: center;
   width: min(100%, calc(var(--content) + 3rem));
   margin-inline: auto;
-  padding: clamp(4rem, 8vw, 7.5rem) 1.5rem clamp(4.5rem, 8vw, 7rem);
+  padding: clamp(2.5rem, 3.5vw, 3rem) 1.5rem clamp(1.75rem, 2vw, 2rem);
 }
 
 .hero__copy {
@@ -156,7 +156,7 @@ a:hover {
   margin: 0;
   color: var(--signal);
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.78rem;
   font-weight: 500;
   letter-spacing: 0.07em;
   line-height: 1.5;
@@ -229,7 +229,7 @@ a:hover {
 .research-details dt {
   color: var(--slate);
   font-family: var(--font-mono);
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   letter-spacing: 0.06em;
   line-height: 1.5;
   text-transform: uppercase;
@@ -237,7 +237,7 @@ a:hover {
 
 .hero__metadata dd {
   margin: 0.2rem 0 0;
-  font-size: 0.86rem;
+  font-size: 0.95rem;
   line-height: 1.45;
 }
 
@@ -279,7 +279,7 @@ a:hover {
 .page-section__inner {
   width: min(100%, calc(var(--content) + 3rem));
   margin-inline: auto;
-  padding: clamp(4.5rem, 7vw, 6.5rem) 1.5rem;
+  padding: clamp(2.75rem, 3.35vw, 3.5rem) 1.5rem;
 }
 
 .page-section__header {
@@ -299,7 +299,7 @@ a:hover {
 
 .research-layout {
   display: grid;
-  grid-template-columns: minmax(0, 8fr) minmax(17rem, 4fr);
+  grid-template-columns: minmax(0, 7.5fr) minmax(18rem, 4.5fr);
   gap: clamp(2rem, 4vw, 3.75rem);
   align-items: start;
 }
@@ -358,7 +358,7 @@ a:hover {
 .experience-meta {
   color: var(--slate);
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.78rem;
   line-height: 1.55;
 }
 
@@ -397,7 +397,7 @@ a:hover {
   padding: 1.25rem 0.75rem 0 0;
   border-top: 1px solid var(--rule);
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.78rem;
   line-height: 1.45;
 }
 
@@ -434,7 +434,7 @@ a:hover {
 
 .research-details dd {
   margin: 0.45rem 0 0;
-  font-size: 0.92rem;
+  font-size: 1rem;
   line-height: 1.62;
 }
 
@@ -446,7 +446,7 @@ a:hover {
   margin: 1.6rem 0 0;
   color: var(--slate);
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.82rem;
   line-height: 1.7;
 }
 
@@ -459,7 +459,7 @@ a:hover {
 
 .experience-layout {
   display: grid;
-  grid-template-columns: minmax(0, 8fr) minmax(17rem, 4fr);
+  grid-template-columns: minmax(0, 7.5fr) minmax(18rem, 4.5fr);
   gap: clamp(2.5rem, 5vw, 4.5rem);
   align-items: start;
 }
@@ -499,7 +499,7 @@ a:hover {
 .experience-feature__work li {
   position: relative;
   padding-left: 1.15rem;
-  font-size: 0.94rem;
+  font-size: 1rem;
 }
 
 .experience-feature__work li::before {
@@ -554,7 +554,7 @@ a:hover {
   margin: 0;
   color: var(--slate);
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.78rem;
   line-height: 1.55;
 }
 
@@ -570,14 +570,14 @@ a:hover {
 .experience-list article > p:last-child {
   margin: 0.7rem 0 0;
   color: var(--slate);
-  font-size: 0.86rem;
+  font-size: 0.95rem;
   line-height: 1.58;
 }
 
 .public-code__intro {
   margin: 0 0 1.25rem;
   color: var(--slate);
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .project-list {
@@ -597,7 +597,7 @@ a:hover {
   margin: 0.15rem 0 0;
   color: var(--signal);
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.78rem;
 }
 
 .project-row h3 {
@@ -608,13 +608,13 @@ a:hover {
   max-width: 46rem;
   margin: 0.65rem 0 0;
   color: var(--slate);
-  font-size: 0.94rem;
+  font-size: 1rem;
 }
 
 .project-row__body .project-row__language {
   color: var(--ink);
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.78rem;
 }
 
 .project-row__links {
@@ -629,7 +629,7 @@ a:hover {
   min-height: 2.75rem;
   align-items: center;
   color: var(--signal);
-  font-size: 0.8rem;
+  font-size: 0.875rem;
   font-weight: 600;
 }
 
@@ -656,7 +656,7 @@ a:hover {
   max-width: 31rem;
   margin: 0.7rem 0 0;
   color: var(--slate);
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .technology-matrix {
@@ -673,14 +673,14 @@ a:hover {
 }
 
 .technology-matrix dt {
-  font-size: 0.86rem;
+  font-size: 0.95rem;
   font-weight: 600;
 }
 
 .technology-matrix dd {
   margin: 0;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   line-height: 1.7;
 }
 
@@ -717,7 +717,7 @@ a:hover {
   min-height: 2.75rem;
   align-items: center;
   color: var(--signal);
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 600;
 }
 
@@ -732,7 +732,7 @@ a:hover {
   margin: 0 auto;
   padding: 1.25rem 1.5rem;
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.75rem;
 }
 
 @media (max-width: 860px) {
@@ -756,7 +756,7 @@ a:hover {
     align-items: center;
     color: var(--signal);
     font-family: var(--font-mono);
-    font-size: 0.72rem;
+    font-size: 0.84rem;
     list-style: none;
   }
 
@@ -820,7 +820,9 @@ a:hover {
 @media (max-width: 620px) {
   .hero {
     grid-template-columns: 1fr;
-    padding-top: 3.25rem;
+    gap: 1.25rem;
+    padding-top: 2.75rem;
+    padding-bottom: 2rem;
   }
 
   .hero__copy {
@@ -833,11 +835,13 @@ a:hover {
 
   .hero h1 {
     order: 2;
+    margin-top: 0;
     font-size: clamp(2.8rem, 15vw, 4.25rem);
   }
 
   .hero__intro {
     order: 3;
+    margin-top: 0.5rem;
   }
 
   .hero__portrait-frame {
@@ -848,11 +852,17 @@ a:hover {
 
   .hero__actions {
     order: 5;
+    margin-top: 0.5rem;
   }
 
   .hero__metadata {
     order: 6;
     width: 100%;
+    margin-top: 0.75rem;
+  }
+
+  .page-section__inner {
+    padding-block: 2.625rem;
   }
 
   .research-heading,

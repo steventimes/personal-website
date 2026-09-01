@@ -53,6 +53,7 @@ export interface PublicProject {
   language: string;
   url: string;
   homepage?: string;
+  packageUrl?: string;
 }
 
 export interface OtherWorkItem {
@@ -193,7 +194,8 @@ export const site: Site = {
       description: "Typed, lazy data pipelines for Python, with synchronous streams, structured async concurrency, record-oriented transforms, and optional Rust execution.",
       language: "Python · Rust",
       url: "https://github.com/steventimes/fpstreams",
-      homepage: "https://steventimes.github.io/fpstreams/"
+      homepage: "https://steventimes.github.io/fpstreams/",
+      packageUrl: "https://pypi.org/project/fpstreams/"
     },
     {
       name: "dependency-checker",

@@ -8,7 +8,7 @@ interface Props {
 const { projects } = Astro.props;
 ---
 <div class="public-code">
-  <p class="public-code__intro">Maintained public projects, presented in intentional order.</p>
+  <p class="public-code__intro">Maintained public projects.</p>
   <ol class="project-list">
     {projects.map((project, index) => (
       <li>
@@ -20,10 +20,13 @@ const { projects } = Astro.props;
             <p class="project-row__language">{project.language}</p>
           </div>
           <div class="project-row__links">
-            <a href={project.url} target="_blank" rel="noreferrer">GitHub<span aria-hidden="true"> ↗</span></a>
-            {project.homepage && (
-              <a href={project.homepage} target="_blank" rel="noreferrer">Project site<span aria-hidden="true"> ↗</span></a>
+            {project.packageUrl && (
+              <a href={project.packageUrl} target="_blank" rel="noreferrer">PyPI<span aria-hidden="true"> ↗</span></a>
             )}
+            {project.homepage && (
+              <a href={project.homepage} target="_blank" rel="noreferrer">Docs<span aria-hidden="true"> ↗</span></a>
+            )}
+            <a href={project.url} target="_blank" rel="noreferrer">GitHub<span aria-hidden="true"> ↗</span></a>
           </div>
         </article>
       </li>

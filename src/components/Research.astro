@@ -40,7 +40,7 @@ const { primary, secondary } = Astro.props;
       </div>
     </dl>
 
-    <p class="method-line"><span>Methods</span>{primary.methods.join(" · ")}</p>
+    <p class="method-line"><span>Methods</span>{" "}{primary.methods.join(" · ")}</p>
   </article>
 
   <article id={secondary.id} class="research-secondary">
@@ -64,6 +64,6 @@ const { primary, secondary } = Astro.props;
         <dd>{secondary.contribution}</dd>
       </div>
     </dl>
-    <p class="method-line"><span>Methods</span>{secondary.methods.join(" · ")}</p>
+    <p class="method-line"><span>Methods</span>{" "}{secondary.methods.join(" · ")}</p>
   </article>
 </div>

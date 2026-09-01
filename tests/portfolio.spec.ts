@@ -81,7 +81,16 @@ test("renders curated public code and deployment-only other work", async ({ page
 
   const projects = page.locator("#code .project-row");
   await expect(projects).toHaveCount(2);
+  await expect(page.locator("#code").getByText("Maintained public projects.", { exact: true })).toBeVisible();
   await expect(projects.nth(0).getByRole("heading", { name: "fpstreams" })).toBeVisible();
+  await expect(projects.nth(0).getByRole("link", { name: /PyPI/ })).toHaveAttribute(
+    "href",
+    "https://pypi.org/project/fpstreams/"
+  );
+  await expect(projects.nth(0).getByRole("link", { name: /Docs/ })).toHaveAttribute(
+    "href",
+    "https://steventimes.github.io/fpstreams/"
+  );
   await expect(projects.nth(1).getByRole("heading", { name: "dependency-checker" })).toBeVisible();
   await expect(projects.nth(1)).toContainText("coding-agent skill");
   await expect(page.locator("#code").getByText(/soccer-analytics|Prompt-Testing-Framework|high-ed-data-generator/)).toHaveCount(0);
@@ -105,6 +114,57 @@ test("uses the restrained systems-research visual system", async ({ page }) => {
   expect(portrait).not.toBeNull();
   expect(portrait!.width).toBeGreaterThan(220);
   expect(portrait!.width).toBeLessThan(420);
+});
+
+test("keeps supporting text at readable sizes", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto("/");
+
+  const minimumSizes: Array<[string, number]> = [
+    [".site-header__links a", 13],
+    [".hero__role", 12],
+    [".research-details dd", 16],
+    [".method-line", 13],
+    [".experience-list article > p:last-child", 15],
+    [".project-row__body > p", 16],
+    [".project-row__links a", 14],
+    [".technology-matrix dd", 14]
+  ];
+
+  for (const [selector, minimum] of minimumSizes) {
+    const size = await page.locator(selector).first().evaluate((element) =>
+      Number.parseFloat(getComputedStyle(element).fontSize)
+    );
+    expect(size, selector).toBeGreaterThanOrEqual(minimum);
+  }
+});
+
+test("brings primary research into the first desktop viewport", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto("/");
+
+  const title = page.getByRole("heading", {
+    level: 3,
+    name: "FluidLSM and workload-aware RocksDB tuning"
+  });
+  const box = await title.boundingBox();
+  expect(box).not.toBeNull();
+  expect(box!.y).toBeLessThan(890);
+  expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThan(4300);
+});
+
+test("keeps labels readable to assistive technology", async ({ page }) => {
+  await page.goto("/");
+
+  await expect(page.locator(".research-primary .method-line")).toContainText("Methods RocksDB");
+  await expect(page.locator(".experience-feature .method-line")).toContainText("Built with Java");
+});
+
+test("keeps the larger mobile layout compact", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+
+  expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThan(7000);
 });
 
 for (const viewport of [

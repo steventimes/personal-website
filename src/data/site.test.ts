@@ -9,6 +9,11 @@ describe("portfolio content boundaries", () => {
     ]);
   });
 
+  it("links the published fpstreams package", () => {
+    const fpstreams = site.publicCode.find((project) => project.name === "fpstreams");
+    expect(fpstreams?.packageUrl).toBe("https://pypi.org/project/fpstreams/");
+  });
+
   it("keeps the reimbursement repository with the featured internship", () => {
     expect(site.featuredExperience.link).toEqual({
       label: "View reimbursement workflow code",
