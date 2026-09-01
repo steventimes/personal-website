@@ -4,9 +4,10 @@ interface Props {
   email: string;
   linkedin: string;
   github: string;
+  resumePath: string;
 }
 
-const { text, email, linkedin, github } = Astro.props;
+const { text, email, linkedin, github, resumePath } = Astro.props;
 ---
 <div class="contact-block">
   <p>{text}</p>
@@ -14,5 +15,6 @@ const { text, email, linkedin, github } = Astro.props;
     <a href={`mailto:${email}`}>Email</a>
     <a href={linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
     <a href={github} target="_blank" rel="noreferrer">GitHub</a>
+    <a href={resumePath}>Résumé</a>
   </div>
 </div>

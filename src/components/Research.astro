@@ -1,0 +1,69 @@
+---
+import type { ResearchItem } from "../data/site";
+
+interface Props {
+  primary: ResearchItem;
+  secondary: ResearchItem;
+}
+
+const { primary, secondary } = Astro.props;
+---
+<div class="research-layout">
+  <article id={primary.id} class="research-primary">
+    <header class="research-heading">
+      <div>
+        <p class="section-kicker">Primary research</p>
+        <h3>{primary.title}</h3>
+      </div>
+      <div class="research-meta">
+        <p>{primary.organization}</p>
+        <p>{primary.time}</p>
+      </div>
+    </header>
+
+    <p class="research-summary">{primary.summary}</p>
+
+    {primary.trace && (
+      <ol class="research-trace" aria-label="Research direction">
+        {primary.trace.map((step) => <li>{step}</li>)}
+      </ol>
+    )}
+
+    <dl class="research-details">
+      <div>
+        <dt>Research question</dt>
+        <dd>{primary.question}</dd>
+      </div>
+      <div>
+        <dt>Current work</dt>
+        <dd>{primary.contribution}</dd>
+      </div>
+    </dl>
+
+    <p class="method-line"><span>Methods</span>{primary.methods.join(" · ")}</p>
+  </article>
+
+  <article id={secondary.id} class="research-secondary">
+    <header>
+      <p class="section-kicker">Related study</p>
+      <h3>{secondary.title}</h3>
+      <div class="research-meta">
+        <p>{secondary.organization}</p>
+        <p>{secondary.time}</p>
+      </div>
+    </header>
+
+    <p class="research-summary">{secondary.summary}</p>
+    <dl class="research-details research-details--compact">
+      <div>
+        <dt>Question</dt>
+        <dd>{secondary.question}</dd>
+      </div>
+      <div>
+        <dt>Work</dt>
+        <dd>{secondary.contribution}</dd>
+      </div>
+    </dl>
+    <p class="method-line"><span>Methods</span>{secondary.methods.join(" · ")}</p>
+  </article>
+</div>

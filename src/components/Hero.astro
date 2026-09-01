@@ -8,18 +8,29 @@ interface Props {
 
 const { name, profile } = Astro.props;
 ---
-<section id="about" class="hero" aria-labelledby="hero-title">
-  <div class="hero__profile">
-    <div class="hero__copy">
-      <h1 id="hero-title">{name}</h1>
-      <p class="hero__role">{profile.role}</p>
-      <p class="hero__intro">{profile.intro}</p>
-      <div class="hero__actions">
-        <a href={profile.resumePath}>View résumé</a>
-        <a href={`mailto:${profile.email}`}>Email Steven</a>
-      </div>
+<section id="about" class="hero" aria-labelledby="intro-title">
+  <div class="hero__copy">
+    <p class="hero__role">{profile.role}</p>
+    <h1 id="intro-title">{name}</h1>
+    <p class="hero__intro">{profile.intro}</p>
+
+    <div class="hero__actions" aria-label="Primary links">
+      <a href={`mailto:${profile.email}`}>Email</a>
+      <a href={profile.githubUrl} target="_blank" rel="noreferrer">GitHub</a>
+      <a href={profile.resumePath}>Résumé</a>
     </div>
 
+    <dl class="hero__metadata" aria-label="Education summary">
+      {profile.metadata.map((item) => (
+        <div>
+          <dt>{item.label}</dt>
+          <dd>{item.value}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+
+  <figure class="hero__portrait-frame">
     <img
       class="hero__portrait"
       src={profile.photoPath}
@@ -27,12 +38,5 @@ const { name, profile } = Astro.props;
       width="640"
       height="480"
     />
-  </div>
-
-  <div class="hero__details" aria-label="Education summary">
-    <p class="hero__detail-primary">
-      {profile.metadata.slice(0, 3).map((item) => item.value).join(" · ")}
-    </p>
-    <p class="hero__detail-secondary">{profile.metadata[3]?.value}</p>
-  </div>
+  </figure>
 </section>

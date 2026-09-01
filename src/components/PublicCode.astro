@@ -1,0 +1,32 @@
+---
+import type { PublicProject } from "../data/site";
+
+interface Props {
+  projects: PublicProject[];
+}
+
+const { projects } = Astro.props;
+---
+<div class="public-code">
+  <p class="public-code__intro">Maintained public projects, presented in intentional order.</p>
+  <ol class="project-list">
+    {projects.map((project, index) => (
+      <li>
+        <article class="project-row">
+          <p class="project-row__index">{String(index + 1).padStart(2, "0")}</p>
+          <div class="project-row__body">
+            <h3>{project.name}</h3>
+            <p>{project.description}</p>
+            <p class="project-row__language">{project.language}</p>
+          </div>
+          <div class="project-row__links">
+            <a href={project.url} target="_blank" rel="noreferrer">GitHub<span aria-hidden="true"> ↗</span></a>
+            {project.homepage && (
+              <a href={project.homepage} target="_blank" rel="noreferrer">Project site<span aria-hidden="true"> ↗</span></a>
+            )}
+          </div>
+        </article>
+      </li>
+    ))}
+  </ol>
+</div>

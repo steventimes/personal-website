@@ -1,54 +1,110 @@
 import { expect, test } from "@playwright/test";
 
-const githubApiPattern = "https://api.github.com/**";
-
-test.beforeEach(async ({ page }) => {
-  await page.route(githubApiPattern, (route) => route.abort());
-});
-
-test("renders the evidence-led page order and primary actions", async ({ page }) => {
+test("renders the research-first hero and research hierarchy", async ({ page }) => {
   await page.goto("/");
 
-  await expect(page.getByRole("heading", {
+  const introduction = page.locator("#about");
+  await expect(introduction.getByRole("heading", {
     level: 1,
     name: "Hongchen (Steven) Yang"
-  })).toBeVisible();
-  await expect(page.getByText("Database systems researcher and software engineer.")).toBeVisible();
-  await expect(page.getByRole("link", { name: "View résumé" })).toHaveAttribute("href", "/resume.pdf");
-  await expect(page.getByRole("link", { name: "Email Steven" })).toHaveAttribute("href", /^mailto:/);
+  })).toHaveCount(1);
+  await expect(introduction.getByText(
+    "I study adaptive storage systems and build agent workflows for real operational tasks.",
+    { exact: true }
+  )).toBeVisible();
+  await expect(introduction.getByText("Hero", { exact: true })).toHaveCount(0);
+  await expect(introduction.getByRole("link", { name: "Email", exact: true })).toHaveAttribute("href", /^mailto:/);
+  await expect(introduction.getByRole("link", { name: "GitHub", exact: true })).toHaveAttribute(
+    "href",
+    "https://github.com/steventimes"
+  );
+  await expect(introduction.getByRole("link", { name: "Résumé", exact: true })).toHaveAttribute("href", "/resume.pdf");
+  await expect(introduction.getByText("B.S. Computer Science", { exact: true })).toBeVisible();
+  await expect(introduction.getByText("Mathematics minor", { exact: true })).toHaveCount(0);
 
-  const sectionHeadings = await page.locator("main h2").allTextContents();
-  expect(sectionHeadings).toEqual([
-    "Selected Work",
+  await expect(page.getByRole("heading", {
+    level: 3,
+    name: "FluidLSM and workload-aware RocksDB tuning"
+  })).toBeVisible();
+  await expect(page.locator(".research-trace li")).toHaveText([
+    "Workload shifts",
+    "Compaction behavior",
+    "Adaptive tuning",
+    "FluidLSM"
+  ]);
+  await expect(page.getByRole("heading", {
+    level: 3,
+    name: "Data fragmentation and text-to-SQL evaluation"
+  })).toBeVisible();
+});
+
+test("uses the research-first page order and no runtime search hooks", async ({ page }) => {
+  await page.goto("/");
+
+  expect(await page.locator("main h2").allTextContents()).toEqual([
+    "Research",
     "Experience",
-    "Technical Stack",
     "Public Code",
+    "Other Work",
+    "Technical Profile",
     "Contact"
   ]);
 
-  for (const id of ["about", "projects", "experience", "skills", "repos", "contact"]) {
+  for (const id of ["about", "research", "experience", "code", "other-work", "skills", "contact"]) {
     await expect(page.locator(`#${id}`)).toHaveCount(1);
   }
+
+  await expect(page.locator("[data-command-palette], [data-command-trigger], [data-repo-cards]")).toHaveCount(0);
+  const requestedUrls = await page.evaluate(() => performance
+    .getEntriesByType("resource")
+    .map((entry) => entry.name));
+  expect(requestedUrls.some((url) => url.includes("api.github.com"))).toBe(false);
 });
 
-test("presents a compact research profile", async ({ page }) => {
+test("features the latest internship and keeps its code link in context", async ({ page }) => {
   await page.goto("/");
 
-  const hero = page.locator("#about");
-  await expect(hero.getByText(
-    "Brandeis University · B.S. Computer Science · Mathematics minor · December 2026",
-    { exact: true }
-  )).toBeVisible();
-  await expect(hero.getByText(
-    "3.748 GPA · Dean's List every semester",
-    { exact: true }
-  )).toBeVisible();
+  const internship = page.locator(".experience-feature");
+  await expect(internship.getByRole("heading", { name: "AI Development Intern" })).toBeVisible();
+  await expect(internship.getByText("Hefei City Cloud Data Center Co., Ltd.", { exact: true })).toBeVisible();
+  await expect(internship.getByText("Jun 2026 – Aug 2026", { exact: true })).toBeVisible();
+  await expect(internship.getByRole("link", {
+    name: /View reimbursement workflow code/
+  })).toHaveAttribute("href", "https://github.com/steventimes/Email-project-yudao");
+  await expect(internship.locator(".experience-feature__work > li")).toHaveCount(3);
+  await expect(page.locator(".experience-list > li")).toHaveCount(2);
+  await expect(page.locator("#code").getByText("Email-project-yudao", { exact: true })).toHaveCount(0);
+});
 
-  const featured = page.locator(".work-item--featured");
-  await expect(featured.getByText("Current research", { exact: true })).toBeVisible();
-  await expect(featured.locator("dt", { hasText: "Question" })).toBeVisible();
-  await expect(featured.locator("dt", { hasText: "Contribution" })).toBeVisible();
-  await expect(page.locator(".timeline__status", { hasText: "Current" })).toHaveCount(3);
+test("renders curated public code and deployment-only other work", async ({ page }) => {
+  await page.goto("/");
+
+  const projects = page.locator("#code .project-row");
+  await expect(projects).toHaveCount(2);
+  await expect(projects.nth(0).getByRole("heading", { name: "fpstreams" })).toBeVisible();
+  await expect(projects.nth(1).getByRole("heading", { name: "dependency-checker" })).toBeVisible();
+  await expect(projects.nth(1)).toContainText("coding-agent skill");
+  await expect(page.locator("#code").getByText(/soccer-analytics|Prompt-Testing-Framework|high-ed-data-generator/)).toHaveCount(0);
+
+  await expect(page.getByRole("link", { name: /Open Software Systems Atlas/ })).toHaveAttribute(
+    "href",
+    "https://software-systems-atlas.pages.dev"
+  );
+  await expect(page.locator('a[href*="github.com/steventimes/software-system-atlas"]')).toHaveCount(0);
+});
+
+test("uses the restrained systems-research visual system", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto("/");
+
+  await expect(page.locator("body")).toHaveCSS("background-color", "rgb(247, 249, 252)");
+  await expect(page.locator(".research-primary")).toHaveCSS("border-top-color", "rgb(34, 84, 209)");
+  await expect(page.locator(".research-secondary")).toHaveCSS("border-top-color", "rgb(20, 125, 119)");
+
+  const portrait = await page.getByRole("img", { name: /Hongchen.*portrait/i }).boundingBox();
+  expect(portrait).not.toBeNull();
+  expect(portrait!.width).toBeGreaterThan(220);
+  expect(portrait!.width).toBeLessThan(420);
 });
 
 for (const viewport of [
@@ -65,170 +121,6 @@ for (const viewport of [
   });
 }
 
-test("uses the research-memo palette, type scale, and portrait ratio", async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 1000 });
-  await page.goto("/");
-
-  await expect(page.locator("body")).toHaveCSS("background-color", "rgb(247, 248, 250)");
-
-  const portrait = page.getByRole("img", { name: /Hongchen.*portrait/i });
-  const box = await portrait.boundingBox();
-  expect(box).not.toBeNull();
-  expect(Math.abs((box!.width / box!.height) - (4 / 3))).toBeLessThan(0.03);
-
-  const title = page.getByRole("heading", {
-    level: 3,
-    name: "FluidLSM and workload-aware RocksDB tuning"
-  });
-  const size = Number.parseFloat(await title.evaluate(
-    (element) => getComputedStyle(element).fontSize
-  ));
-  expect(size).toBeGreaterThanOrEqual(30);
-  expect(size).toBeLessThanOrEqual(38);
-  await expect(page.locator(".work-item--featured")).toHaveCSS(
-    "border-left-color",
-    "rgb(36, 87, 166)"
-  );
-});
-
-test("captures concept comparison screenshots", async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 1000 });
-  await page.goto("/");
-  await page.screenshot({ path: "/tmp/steven-portfolio-desktop-first-viewport.png", fullPage: false });
-  await page.screenshot({ path: "/tmp/steven-portfolio-desktop-full.png", fullPage: true });
-  await page.locator("#about").screenshot({ path: "/tmp/steven-portfolio-hero.png" });
-  await page.locator("#projects").screenshot({ path: "/tmp/steven-portfolio-work.png" });
-  await page.locator("#experience").screenshot({ path: "/tmp/steven-portfolio-experience.png" });
-  await page.locator("#skills").screenshot({ path: "/tmp/steven-portfolio-stack.png" });
-  await page.locator("#repos").screenshot({ path: "/tmp/steven-portfolio-repos.png" });
-  await page.locator("#contact").screenshot({ path: "/tmp/steven-portfolio-contact.png" });
-  await page.locator(".site-footer").screenshot({ path: "/tmp/steven-portfolio-footer.png" });
-
-  await page.getByRole("button", { name: "Search" }).click();
-  const commandDialog = page.getByRole("dialog", { name: "Navigate" });
-  const commandInput = commandDialog.getByRole("searchbox", { name: "Search" });
-  await commandInput.press("ArrowDown");
-  await commandDialog.screenshot({ path: "/tmp/steven-portfolio-command.png" });
-  await page.keyboard.press("Escape");
-
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
-  await page.screenshot({ path: "/tmp/steven-portfolio-mobile.png", fullPage: false });
-  await page.locator(".site-header__menu > summary").click();
-  await page.screenshot({ path: "/tmp/steven-portfolio-mobile-menu.png", fullPage: false });
-  const menuOverflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-  expect(menuOverflow).toBeLessThanOrEqual(0);
-});
-
-test("uses restrained work title and command dialog styles", async ({ page }) => {
-  await page.goto("/");
-
-  await expect(page.getByRole("heading", {
-    level: 3,
-    name: "Fragmented higher-education data and text-to-SQL"
-  })).toHaveCSS("font-size", "24px");
-
-  const searchTrigger = page.getByRole("button", { name: "Search" });
-  await expect(searchTrigger).toHaveCSS("column-gap", "8px");
-  await searchTrigger.click();
-  const dialog = page.getByRole("dialog", { name: "Navigate" });
-  await expect(dialog).toBeVisible();
-  await expect(dialog.getByRole("heading", { name: "Navigate" })).toHaveCSS("color", "rgb(23, 25, 31)");
-
-  const input = dialog.getByRole("searchbox", { name: "Search" });
-  await expect(input).toHaveCSS("color", "rgb(23, 25, 31)");
-  await expect(input).toHaveCSS("background-color", "rgb(255, 255, 255)");
-  await expect(input).toHaveCSS("border-color", "rgb(216, 221, 229)");
-  await expect(dialog.getByRole("button", { name: "Close" })).toHaveCSS("color", "rgb(89, 97, 112)");
-  await input.press("ArrowDown");
-  const activeOption = dialog.locator("[role='option'][aria-selected='true']");
-  await expect(activeOption).toHaveCSS("background-color", "rgb(247, 248, 250)");
-  await expect(activeOption).toHaveCSS("border-left-color", "rgb(36, 87, 166)");
-});
-
-test("command search supports keyboard filtering and navigation", async ({ page }) => {
-  await page.goto("/");
-
-  await page.keyboard.press("Control+K");
-  await page.getByRole("searchbox", { name: "Search" }).fill("Work");
-  await page.keyboard.press("ArrowDown");
-  await page.keyboard.press("Enter");
-
-  await expect.poll(() => page.evaluate(() => location.hash)).toBe("#projects");
-});
-
-test("command search uses the approved empty-state copy", async ({ page }) => {
-  await page.goto("/");
-  await page.keyboard.press("Control+K");
-  await page.getByRole("searchbox", { name: "Search" }).fill("no such destination");
-  await expect(page.getByText("No matching destination.")).toBeVisible();
-});
-
-test("command trigger keeps aria-expanded in sync", async ({ page }) => {
-  await page.goto("/");
-  const trigger = page.getByRole("button", { name: /Search/ });
-
-  await expect(trigger).toHaveAttribute("aria-expanded", "false");
-  await page.keyboard.press("Control+K");
-  await expect(trigger).toHaveAttribute("aria-expanded", "true");
-  await page.keyboard.press("Escape");
-  await expect(trigger).toHaveAttribute("aria-expanded", "false");
-});
-
-test("every command close path clears active option state", async ({ page }) => {
-  await page.goto("/");
-
-  const trigger = page.getByRole("button", { name: /Search/ });
-  const dialog = page.locator("[data-command-palette]");
-  const input = dialog.locator("[data-command-input]");
-  const firstOption = dialog.locator("[role='option']").first();
-
-  await trigger.click();
-  await input.press("ArrowDown");
-  await expect(input).toHaveAttribute("aria-activedescendant", /option-/);
-  await expect(firstOption).toHaveAttribute("aria-selected", "true");
-  await firstOption.click();
-
-  await expect(dialog).not.toBeVisible();
-  await expect(input).not.toHaveAttribute("aria-activedescendant", /.+/);
-  await expect(firstOption).toHaveAttribute("aria-selected", "false");
-
-  await trigger.click();
-  await input.press("ArrowDown");
-  await dialog.getByRole("button", { name: "Close" }).focus();
-  await page.keyboard.press("Escape");
-
-  await expect(dialog).not.toBeVisible();
-  await expect(input).not.toHaveAttribute("aria-activedescendant", /.+/);
-  await expect(firstOption).toHaveAttribute("aria-selected", "false");
-});
-
-test("Tab keeps command focus inside the modal", async ({ page }) => {
-  await page.goto("/");
-
-  const trigger = page.getByRole("button", { name: /Search/ });
-  const dialog = page.getByRole("dialog", { name: "Navigate" });
-  const input = dialog.getByRole("searchbox", { name: "Search" });
-  const closeButton = dialog.getByRole("button", { name: "Close" });
-
-  await trigger.focus();
-  await page.keyboard.press("Control+K");
-  await expect(input).toBeFocused();
-
-  await page.keyboard.press("Shift+Tab");
-  await expect(dialog).toBeVisible();
-  await expect(closeButton).toBeFocused();
-
-  await page.keyboard.press("Tab");
-  await expect(dialog).toBeVisible();
-  await expect(input).toBeFocused();
-  await expect(dialog.locator("[role='option']").first()).toHaveAttribute("tabindex", "-1");
-
-  await page.keyboard.press("Escape");
-  await expect(dialog).not.toBeVisible();
-  await expect(trigger).toBeFocused();
-});
-
 test("JavaScript-disabled mobile navigation keeps section links available", async ({ browser }) => {
   const context = await browser.newContext({
     javaScriptEnabled: false,
@@ -239,68 +131,10 @@ test("JavaScript-disabled mobile navigation keeps section links available", asyn
   try {
     await page.goto("/");
     await page.getByText("Menu", { exact: true }).click();
-    await page.getByRole("link", { name: "Experience" }).click();
+    await page.getByRole("link", { name: "Experience", exact: true }).click();
     expect(await page.evaluate(() => location.hash)).toBe("#experience");
-    await expect(page.locator("[data-command-trigger]")).toBeHidden();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
   } finally {
     await context.close();
   }
-});
-
-test("keeps the static repository snapshot when GitHub fails", async ({ page }) => {
-  await page.goto("/");
-  for (const name of [
-    "software-system-atlas",
-    "fpstreams",
-    "soccer-analytics",
-    "high-ed-data-generator",
-    "Prompt-Testing-Framework"
-  ]) {
-    await expect(page.getByRole("link", { name: new RegExp(name, "i") })).toBeVisible();
-  }
-  await expect(page.getByText(
-    "A bilingual software-systems curriculum with 14 volumes, 320 chapter files, machine-readable catalogs, and automated documentation checks.",
-    { exact: true }
-  )).toBeVisible();
-  await expect(page.getByText("Live GitHub data unavailable.")).toBeVisible();
-});
-
-test("refreshes repository metadata while preserving authored content", async ({ page }) => {
-  await page.unroute(githubApiPattern);
-  await page.route(githubApiPattern, (route) => route.fulfill({
-    status: 200,
-    contentType: "application/json",
-    body: JSON.stringify([{
-      name: "fpstreams",
-      description: "Remote description that must not replace authored content.",
-      html_url: "https://github.com/steventimes/remote-fpstreams-url",
-      language: "Rust",
-      stargazers_count: 2,
-      forks_count: 1,
-      updated_at: "2026-07-12T10:00:00Z",
-      fork: false
-    }, {
-      name: "soccer-analytics"
-    }])
-  }));
-  await page.goto("/");
-
-  const row = page.locator('[data-repo-name="fpstreams"]');
-  await expect(row.getByText("2 stars", { exact: true })).toBeVisible();
-  await expect(row.getByText(
-    "A typed functional programming library for Python with lazy streams, Option and Result containers, parallel processing, and optional Rust acceleration.",
-    { exact: true }
-  )).toBeVisible();
-  await expect(row.getByRole("link", { name: "fpstreams" })).toHaveAttribute(
-    "href",
-    "https://github.com/steventimes/fpstreams"
-  );
-  await expect(row.getByText("Rust", { exact: true })).toBeVisible();
-  await expect(row.getByText("1 fork", { exact: true })).toBeVisible();
-
-  const staticRow = page.locator('[data-repo-name="soccer-analytics"]');
-  await expect(staticRow.getByText("Python", { exact: true })).toBeVisible();
-  await expect(staticRow.getByText("0 stars", { exact: true })).toBeVisible();
-  await expect(staticRow.getByText("0 forks", { exact: true })).toBeVisible();
-  await expect(page.getByText("Live GitHub data unavailable.")).toBeHidden();
 });

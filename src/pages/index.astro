@@ -1,42 +1,52 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import CommandPalette from "../components/CommandPalette.astro";
 import Contact from "../components/Contact.astro";
+import Experience from "../components/Experience.astro";
 import Hero from "../components/Hero.astro";
-import RepoList from "../components/RepoList.astro";
+import OtherWork from "../components/OtherWork.astro";
+import PublicCode from "../components/PublicCode.astro";
+import Research from "../components/Research.astro";
 import Section from "../components/Section.astro";
-import SelectedWork from "../components/SelectedWork.astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import TechnicalStack from "../components/TechnicalStack.astro";
-import Timeline from "../components/Timeline.astro";
 import { site } from "../data/site";
 import "../styles/global.css";
 ---
 
-<BaseLayout title={`${site.name} | Database Systems Researcher`} description={site.role}>
+<BaseLayout title={`${site.name} | Database Research & AI Systems`} description={site.role}>
   <a class="skip-link" href="#main-content">Skip to content</a>
   <SiteHeader name={site.name} navigation={site.navigation} resumePath={site.resumePath} />
 
   <main id="main-content">
     <Hero name={site.name} profile={site.profile} />
-    <Section id="projects" title="Selected Work">
-      <SelectedWork items={site.selectedWork} />
+
+    <Section id="research" title="Research">
+      <Research primary={site.research.primary} secondary={site.research.secondary} />
     </Section>
+
     <Section id="experience" title="Experience" variant="band">
-      <Timeline items={site.experience} />
+      <Experience featured={site.featuredExperience} supporting={site.supportingExperience} />
     </Section>
-    <Section id="skills" title="Technical Stack">
+
+    <Section id="code" title="Public Code">
+      <PublicCode projects={site.publicCode} />
+    </Section>
+
+    <Section id="other-work" title="Other Work">
+      <OtherWork items={site.otherWork} />
+    </Section>
+
+    <Section id="skills" title="Technical Profile">
       <TechnicalStack groups={site.technology} />
     </Section>
-    <Section id="repos" title="Public Code">
-      <RepoList username={site.githubUsername} repositories={site.repositories} />
-    </Section>
+
     <Section id="contact" title="Contact" variant="band">
       <Contact
         text={site.contactText}
         email={site.email}
         linkedin={site.linkedin}
         github={site.githubUrl}
+        resumePath={site.resumePath}
       />
     </Section>
   </main>
@@ -44,10 +54,4 @@ import "../styles/global.css";
   <footer class="site-footer">
     <p>{site.name} · {site.location} · © {new Date().getFullYear()}</p>
   </footer>
-
-  <CommandPalette items={site.commands} />
 </BaseLayout>
-
-<script>
-  import "../scripts/repo-cards";
-</script>

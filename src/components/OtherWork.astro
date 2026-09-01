@@ -1,0 +1,22 @@
+---
+import type { OtherWorkItem } from "../data/site";
+
+interface Props {
+  items: OtherWorkItem[];
+}
+
+const { items } = Astro.props;
+---
+<ol class="other-work-list">
+  {items.map((item) => (
+    <li>
+      <article>
+        <h3>{item.title}</h3>
+        <p>{item.description}</p>
+        <a class="text-link" href={item.link.href} target="_blank" rel="noreferrer">
+          {item.link.label}<span aria-hidden="true"> ↗</span>
+        </a>
+      </article>
+    </li>
+  ))}
+</ol>
